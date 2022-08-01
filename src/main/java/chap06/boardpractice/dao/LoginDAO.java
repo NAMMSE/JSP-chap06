@@ -1,29 +1,39 @@
 package chap06.boardpractice.dao;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import chap06.boardpractice.database.DBConnector;
+
 public class LoginDAO {
-	private String login_id;
-	private String login_password;
 	
-	public LoginDAO(String login_id, String login_password) {
-		this.login_id = login_id;
-		this.login_password = login_password;
+	public static HashMap<String, String> getList(){
+		//List<Login> list = new ArrayList<>();
+		HashMap<String, String> map = new HashMap<>();
+		String sql = "select * from prac_login";
+		
+		
+		try(Connection conn = DBConnector.getConnection();
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+		) {
+			while(rs.next()) {
+				//list.add(new Login(rs.getString("login_id"), rs.getString("login_password")));
+				System.out.println(rs.getString("user_id") + rs.getString("user_password"));
+				map.put(rs.getString("user_id"), rs.getString("user_password"));
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return map;
 	}
 
-	public String getLogin_id() {
-		return login_id;
-	}
-
-	public void setLogin_id(String login_id) {
-		this.login_id = login_id;
-	}
-
-	public String getLogin_password() {
-		return login_password;
-	}
-
-	public void setLogin_password(String login_password) {
-		this.login_password = login_password;
-	}
-	
-	
 }
